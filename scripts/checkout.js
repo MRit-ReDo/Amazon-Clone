@@ -4,7 +4,11 @@ import {
     findProductByID,
     cartTotal
 } from "./utils/cart.js";
-import { formatCurrency } from "./utils/money.js";
+import { 
+    formatCurrency,
+    totalDeliveryCharge,
+    updateBill
+} from "./utils/money.js";
 
 const updateNumberOfItems = () => {
     let toatalItems = 0;
@@ -12,16 +16,8 @@ const updateNumberOfItems = () => {
         toatalItems += cartItem.qty;
     });
     document.querySelector(".return-to-home-link").innerHTML = String(toatalItems)+" items";
-    document.querySelector(".payment-summary-row").innerHTML = "Items ("+String(toatalItems)+")";
+    document.querySelector(".number-of-items").innerHTML = "Items ("+String(toatalItems)+"):";
 }
-
-const getDeliveryOptions = (input) => {
-    return {
-        date: input.dataset.date,
-        price: Number(input.dataset.price)
-    }
-}
-
 
 const renderCheckoutPage = () => {
     let checkoutHTML = "";
@@ -45,7 +41,7 @@ const renderCheckoutPage = () => {
                     <div class="delivery-options-title">Choose a delivery option:</div>
                     <div class="delivery-option">
                         <input type="radio" checked class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Tuesday, June 21" data-price="0" data-id="${product.id}">
+                        data-date="Tuesday, June 21" data-charge="0" data-id="${product.id}">
                         <div>
                             <div class="delivery-option-date">Tuesday, June 21</div>
                             <div class="delivery-option-price">FREE Shipping</div>
@@ -53,7 +49,7 @@ const renderCheckoutPage = () => {
                     </div>
                     <div class="delivery-option">
                         <input type="radio" class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Wednesday, June 15" data-price="499" data-id="${product.id}">
+                        data-date="Wednesday, June 15" data-charge="499" data-id="${product.id}">
                         <div>
                             <div class="delivery-option-date">Wednesday, June 15</div>
                             <div class="delivery-option-price">$4.99 - Shipping</div>
@@ -61,7 +57,7 @@ const renderCheckoutPage = () => {
                     </div>
                     <div class="delivery-option">
                         <input type="radio" class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Monday, June 13" data-price="999" data-id="${product.id}">
+                        data-date="Monday, June 13" data-charge="999" data-id="${product.id}">
                         <div>
                             <div class="delivery-option-date">Monday, June 13</div>
                             <div class="delivery-option-price">$9.99 - Shipping</div>
@@ -71,28 +67,25 @@ const renderCheckoutPage = () => {
             </div>
         </div>
         `
-        
     });
     document.querySelector(".order-summary").innerHTML = checkoutHTML;
     updateNumberOfItems();
+    updateBill(0);
 }
 
 renderCheckoutPage();
 
-setTimeout(() => {
-    document.querySelectorAll(".delivery-option-input").forEach((input) => {
-        input.addEventListener("click",() => {
-            const id = input.dataset.id;
-            const response = getDeliveryOptions(input);
-            document.querySelector(".delivery-date-"+id).innerHTML = "Delivery date: "+response.date;
-            cartTotal();
-        })
+document.querySelectorAll(".delivery-option-input").forEach((input) => {
+    input.addEventListener("click",() => {
+        document.querySelector(".delivery-date-"+input.dataset.id).innerHTML = "Delivery date: "+input.dataset.date;
+        updateBill(totalDeliveryCharge());
     })
-},10)
+})
 
 document.querySelectorAll(".delete-quantity-link").forEach((button) => {
     button.addEventListener("click",() => {
         deleteFromCheckoutPage(button.dataset.id);
         updateNumberOfItems();
+        updateBill(totalDeliveryCharge());
     })
 })
