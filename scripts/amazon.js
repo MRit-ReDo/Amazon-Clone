@@ -1,8 +1,13 @@
 import { products } from "../data/products.js";
-import { cart, updateCart,displayAddedToCartMessage,addProductsToCart } from "./cart.js";
+import { 
+    updateCart,
+    displayAddedToCartMessage,
+    addProductsToCart 
+} from "./utils/cart.js";
+import { formatCurrency } from "./utils/money.js"
 
 const renderProductsPage = () => {
-    var productHTML = "";
+    let productHTML = "";
     products.forEach(product => {
         productHTML += `
         <div class="product-container">
@@ -14,7 +19,7 @@ const renderProductsPage = () => {
                 <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars*10}.png">
                 <div class="product-rating-count link-primary">${product.rating.count}</div>
             </div>
-            <div class="product-price">$${product.priceCents/100}</div>
+            <div class="product-price">$${formatCurrency(product.priceCents)}</div>
             <div class="product-quantity-container">
                 <select class="select-${product.id}">
                     <option selected value="1">1</option><option value="2">2</option><option value="3">3</option>
