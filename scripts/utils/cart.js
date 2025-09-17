@@ -34,7 +34,6 @@ const cartTotal = () => {
         const product = findProductByID(cartItem.pid);
         total += product.priceCents*cartItem.qty;
     });
-    console.log(total);
     return total;
 }
 
