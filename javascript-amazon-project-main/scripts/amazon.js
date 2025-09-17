@@ -1,7 +1,7 @@
 import { products } from "../data/products.js";
-import { cart, cartTotal } from "./cart.js";
+import { cart, updateCart,displayAddedToCartMessage,addProductsToCart } from "./cart.js";
 
-const renderProducts = () => {
+const renderProductsPage = () => {
     var productHTML = "";
     products.forEach(product => {
         productHTML += `
@@ -32,40 +32,21 @@ const renderProducts = () => {
         `
     });
     document.querySelector(".products-grid").innerHTML = productHTML;
-    document.querySelector(".cart-quantity").innerHTML = cartTotal();
+    updateCart();
 }
 
-renderProducts();
+renderProductsPage();
 
-document.querySelectorAll(".add-to-cart-button").forEach(button => {
-    button.addEventListener("click",(event) => {
-        clearTimeout();
-        event.stopPropagation();
-        const id = button.dataset.productId;
-        const toAdd = Number(document.querySelector(".select-"+id).value);
-        var total = 0;
-        var match;
-        cart.forEach(item => {
-            if (item.pid === id) {
-                match = item;
-            }
-            total += item.qty;
+document.addEventListener("DOMContentLoaded",() => {
+    document.querySelectorAll(".add-to-cart-button").forEach(button => {
+        button.addEventListener("click",() => {
+            clearTimeout();
+            const id = button.dataset.productId;
+            addProductsToCart(id);
+            updateCart();
+            displayAddedToCartMessage(id);
         });
-        if (match) {
-            match.qty += toAdd;
-        }
-        else {
-            const cartItem = {
-                pid: id,
-                qty: toAdd
-            }
-            cart.push(cartItem);
-        }
-        document.querySelector(".cart-quantity").innerHTML = total+toAdd;
-        localStorage.setItem("cart1",JSON.stringify(cart));
-        document.querySelector(".added-"+id).classList.add("visible");
-        setTimeout(() => {
-            document.querySelector(".added-"+id).classList.remove("visible");
-        },2000);
-    });
+    })
 })
+
+
