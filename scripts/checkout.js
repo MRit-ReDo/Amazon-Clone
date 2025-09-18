@@ -4,11 +4,18 @@ import {
     findProductByID,
     saveUpdateFromCheckoutPage,
 } from "./utils/cart.js";
+
+import { 
+    deliveryDates,
+    renderDeliverySelection
+} from "./utils/delivery.js";
+
 import { 
     formatCurrency,
     totalDeliveryCharge,
     updateBill
 } from "./utils/money.js";
+
 
 const updateNumberOfItems = () => {
     let toatalItems = 0;
@@ -25,7 +32,7 @@ const renderCheckoutPage = () => {
         const product = findProductByID(cartItem.pid);
         checkoutHTML += `
         <div class="cart-item-container cart-item-${product.id}">
-            <div class="delivery-date delivery-date-${product.id}">Delivery date: Tuesday, June 21</div>
+            <div class="delivery-date delivery-date-${product.id}">Delivery date: ${deliveryDates[0]}</div>
                 <div class="cart-item-details-grid">
                     <img class="product-image" src="${product.image}">
                     <div class="cart-item-details">
@@ -41,32 +48,7 @@ const renderCheckoutPage = () => {
                             <span class="delete-quantity-link link-primary" data-id="${product.id}">Delete</span>
                         </div>
                     </div>
-                    <div class="delivery-options">
-                    <div class="delivery-options-title">Choose a delivery option:</div>
-                    <div class="delivery-option">
-                        <input type="radio" checked class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Tuesday, June 21" data-charge="0" data-id="${product.id}">
-                        <div>
-                            <div class="delivery-option-date">Tuesday, June 21</div>
-                            <div class="delivery-option-price">FREE Shipping</div>
-                        </div>
-                    </div>
-                    <div class="delivery-option">
-                        <input type="radio" class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Wednesday, June 15" data-charge="499" data-id="${product.id}">
-                        <div>
-                            <div class="delivery-option-date">Wednesday, June 15</div>
-                            <div class="delivery-option-price">$4.99 - Shipping</div>
-                        </div>
-                    </div>
-                    <div class="delivery-option">
-                        <input type="radio" class="delivery-option-input" name="delivery-option-${product.id}"
-                        data-date="Monday, June 13" data-charge="999" data-id="${product.id}">
-                        <div>
-                            <div class="delivery-option-date">Monday, June 13</div>
-                            <div class="delivery-option-price">$9.99 - Shipping</div>
-                        </div>
-                    </div>
+                    <div class="delivery-options">${renderDeliverySelection(product.id)}</div>
                 </div>
             </div>
         </div>
@@ -76,8 +58,8 @@ const renderCheckoutPage = () => {
     updateNumberOfItems();
     updateBill(0);
 }
-
 renderCheckoutPage();
+
 
 document.querySelectorAll(".delivery-option-input").forEach((input) => {
     input.addEventListener("click",() => {
@@ -111,7 +93,5 @@ document.querySelectorAll(".save-quantity-button").forEach((button) => {
         document.querySelector(".update-quantity-link-"+id).classList.remove("hide");
         document.querySelector(".save-quantity-input-"+id).value = "";
         document.querySelector(".save-quantity-link-"+id).classList.add("hide");
-        
     })
 })
-
