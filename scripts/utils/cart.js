@@ -1,71 +1,43 @@
+// import statements
 import { products } from "../../data/products.js";
 
+
+// defining variables
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+
+// defining helper functions
 const updateLocalStorage = (item,info) => {
     localStorage.setItem(item,JSON.stringify(info));
 }
 
-const updateCart = () => {
-    let totalItems = 0;
-    cart.forEach(item => {
-        totalItems += item.qty;
-    });
-    document.querySelector(".cart-quantity").innerHTML = totalItems;
-    return totalItems;
-}
-
-const displayAddedToCartMessage = (id) => {
-    document.querySelector(".added-"+id).classList.add("visible");
-    setTimeout(() => {
-        document.querySelector(".added-"+id).classList.remove("visible");
-    },2000);
-}
-
-const findProductByID = (id) => {
-    let match;
-    products.forEach(product => {
-        if (product.id === id) {
-            match = product;
+const findProductByID = (array,id) => {
+    let index = null;
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].id === id) {
+            index = i;
         }
-    });
-    return match;
+    }
+    return array[index];
 }
 
 const cartTotal = () => {
-    let total = 0;
+    let totalValue = 0;
+    let totalItems = 0;
     cart.forEach(cartItem => {
-        const product = findProductByID(cartItem.pid);
-        total += product.priceCents*cartItem.qty;
+        const product = findProductByID(products,cartItem.id);
+        totalValue += product.priceCents*cartItem.qty;
+        totalItems += cartItem.qty;
     });
-    return total;
-}
-
-const addProductsToCart = (id) => {
-    const toAdd = Number(document.querySelector(".select-"+id).value);
-    let match;
-    cart.forEach(item => {
-        if (item.pid === id) {
-            match = item;
-        }
-    });
-    if (match) {
-        match.qty += toAdd;
-    }
-    else {
-        const cartItem = {
-            pid: id,
-            qty: toAdd
-        }
-        cart.push(cartItem);
-    }
-    updateLocalStorage("cart",cart);
-    document.querySelector(".select-"+id).value = 1;
+    return {
+        value: totalValue,
+        number: totalItems
+    };
 }
 
 const deleteFromCheckoutPage = (id) => {
     cart = cart.filter((cartItem) => {
-        return cartItem.pid !== id;
+        return cartItem.id !== id;
     })
     updateLocalStorage("cart",cart);
     document.querySelector(".cart-item-"+id).remove();
@@ -76,7 +48,7 @@ const saveUpdateFromCheckoutPage = (id) => {
     if (value > 0 && value <= 100) {
         let match;
         cart.forEach(item => {
-            if (item.pid === id) {
+            if (item.id === id) {
                 match = item;
             }
         });
@@ -86,12 +58,40 @@ const saveUpdateFromCheckoutPage = (id) => {
     }
 }
 
+
+// rendering functions
+const displayAddedToCartMessage = (id) => {
+    document.querySelector(".added-"+id).classList.add("visible");
+    setTimeout(() => {
+        document.querySelector(".added-"+id).classList.remove("visible");
+    },2000);
+}
+
+const addProductsToCart = (id) => {
+    const toAdd = Number(document.querySelector(".select-"+id).value);
+    const match = findProductByID(cart,id);
+    if (match) {
+        match.qty += toAdd;
+    }
+    else {
+        const cartItem = {
+            id: id,
+            qty: toAdd
+        }
+        cart.push(cartItem);
+    }
+    updateLocalStorage("cart",cart);
+    document.querySelector(".select-"+id).value = 1;
+}
+
+
+// listing exports
 export {
     cart,
-    updateCart,
-    displayAddedToCartMessage,
-    findProductByID,cartTotal,
-    addProductsToCart,
+    findProductByID,
+    cartTotal,
     deleteFromCheckoutPage,
     saveUpdateFromCheckoutPage,
+    displayAddedToCartMessage,
+    addProductsToCart,
 };

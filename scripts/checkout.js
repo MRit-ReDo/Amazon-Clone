@@ -1,5 +1,9 @@
+// import statements
+import { products } from "../data/products.js";
+
 import { 
     cart,
+    cartTotal,
     deleteFromCheckoutPage,
     findProductByID,
     saveUpdateFromCheckoutPage,
@@ -17,11 +21,9 @@ import {
 } from "./utils/money.js";
 
 
+// rendering functions
 const updateNumberOfItems = () => {
-    let toatalItems = 0;
-    cart.forEach(cartItem => {
-        toatalItems += cartItem.qty;
-    });
+    let toatalItems = cartTotal().number;
     document.querySelector(".return-to-home-link").innerHTML = String(toatalItems)+" items";
     document.querySelector(".number-of-items").innerHTML = "Items ("+String(toatalItems)+"):";
 }
@@ -29,7 +31,7 @@ const updateNumberOfItems = () => {
 const renderCheckoutPage = () => {
     let checkoutHTML = "";
     cart.forEach(cartItem => {
-        const product = findProductByID(cartItem.pid);
+        const product = findProductByID(products,cartItem.id);
         checkoutHTML += `
         <div class="cart-item-container cart-item-${product.id}">
             <div class="delivery-date delivery-date-${product.id}">Delivery date: ${deliveryDates[0]}</div>
@@ -58,9 +60,11 @@ const renderCheckoutPage = () => {
     updateNumberOfItems();
     updateBill(0);
 }
+
 renderCheckoutPage();
 
 
+// binding event listeners
 document.querySelectorAll(".delivery-option-input").forEach((input) => {
     input.addEventListener("click",() => {
         document.querySelector(".delivery-date-"+input.dataset.id).innerHTML = "Delivery date: "+input.dataset.date;
