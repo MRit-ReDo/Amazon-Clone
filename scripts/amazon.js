@@ -1,11 +1,10 @@
 // import statements
-import { products } from "../data/products.js";
-
 import { 
-    displayAddedToCartMessage,
-    addProductsToCart,
-    cartTotal
-} from "./utils/cart.js";
+    products,
+    loadProducts 
+} from "../data/products.js";
+
+import { cart } from "./utils/cart.js";
 
 import { formatCurrency } from "./utils/money.js"
 
@@ -31,6 +30,7 @@ const renderProductsPage = () => {
                     <option value="4">4</option><option value="5">5</option>
                 </select>
             </div>
+            ${product.renderExtraInformation()}
             <div class="product-spacer"></div>
             <div class="added-to-cart added-${product.id}">
                 <img src="images/icons/checkmark.png">Added
@@ -40,23 +40,24 @@ const renderProductsPage = () => {
         `
     });
     document.querySelector(".products-grid").innerHTML = productHTML;
-    document.querySelector(".cart-quantity").innerHTML = cartTotal().number;
-}
-
-renderProductsPage();
+    document.querySelector(".cart-quantity").innerHTML = cart.cartTotal().number;
 
 
-// binding event listeners
-document.addEventListener("DOMContentLoaded",() => {
+    // binding event listeners
     document.querySelectorAll(".add-to-cart-button").forEach(button => {
         button.addEventListener("click",() => {
+            console.log(products);
             clearTimeout();
             const id = button.dataset.productId;
-            addProductsToCart(id);
-            document.querySelector(".cart-quantity").innerHTML = cartTotal().number;
-            displayAddedToCartMessage(id);
+            cart.addProductsToCart(id);
+            document.querySelector(".cart-quantity").innerHTML = cart.cartTotal().number;
+            cart.displayAddedToCartMessage(id);
         });
     })
+}
+
+loadProducts().then(() => {
+    renderProductsPage();
 })
 
 
