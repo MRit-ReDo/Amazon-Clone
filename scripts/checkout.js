@@ -1,13 +1,11 @@
 // import statements
-import { products } from "../data/products.js";
-
 import { 
-    cart,
-    cartTotal,
-    deleteFromCheckoutPage,
-    findProductByID,
-    saveUpdateFromCheckoutPage,
-} from "./utils/cart.js";
+    products,
+    loadProducts,
+    findProductByID
+} from "../data/products.js";
+
+import { cart } from "./utils/cart.js";
 
 import { 
     deliveryDates,
@@ -23,14 +21,14 @@ import {
 
 // rendering functions
 const updateNumberOfItems = () => {
-    let toatalItems = cartTotal().number;
+    let toatalItems = cart.cartTotal().number;
     document.querySelector(".return-to-home-link").innerHTML = String(toatalItems)+" items";
     document.querySelector(".number-of-items").innerHTML = "Items ("+String(toatalItems)+"):";
 }
 
 const renderCheckoutPage = () => {
     let checkoutHTML = "";
-    cart.forEach(cartItem => {
+    cart.cart.forEach(cartItem => {
         const product = findProductByID(products,cartItem.id);
         checkoutHTML += `
         <div class="cart-item-container cart-item-${product.id}">
@@ -59,43 +57,49 @@ const renderCheckoutPage = () => {
     document.querySelector(".order-summary").innerHTML = checkoutHTML;
     updateNumberOfItems();
     updateBill(0);
+
+
+    // binding event listeners
+    document.querySelectorAll(".delivery-option-input").forEach((input) => {
+        input.addEventListener("click",() => {
+            document.querySelector(".delivery-date-"+input.dataset.id).innerHTML = "Delivery date: "+input.dataset.date;
+            updateBill(totalDeliveryCharge());
+        })
+    })
+
+    document.querySelectorAll(".delete-quantity-link").forEach((button) => {
+        button.addEventListener("click",() => {
+            cart.deleteFromCheckoutPage(button.dataset.id);
+            updateNumberOfItems();
+            updateBill(totalDeliveryCharge());
+        })
+    })
+
+    document.querySelectorAll(".update-quantity-link").forEach((button) => {
+        button.addEventListener("click",() => {
+            const id = button.dataset.id;
+            document.querySelector(".update-quantity-link-"+id).classList.add("hide");
+            document.querySelector(".save-quantity-link-"+id).classList.remove("hide");
+        })
+    })
+
+    document.querySelectorAll(".save-quantity-button").forEach((button) => {
+        button.addEventListener("click",() => {
+            const id = button.dataset.id;
+            cart.saveUpdateFromCheckoutPage(id);
+            updateNumberOfItems();
+            updateBill(totalDeliveryCharge());
+            document.querySelector(".update-quantity-link-"+id).classList.remove("hide");
+            document.querySelector(".save-quantity-input-"+id).value = "";
+            document.querySelector(".save-quantity-link-"+id).classList.add("hide");
+        })
+    })
 }
 
-renderCheckoutPage();
+
+loadProducts().then(() => {
+    renderCheckoutPage();
+});
 
 
-// binding event listeners
-document.querySelectorAll(".delivery-option-input").forEach((input) => {
-    input.addEventListener("click",() => {
-        document.querySelector(".delivery-date-"+input.dataset.id).innerHTML = "Delivery date: "+input.dataset.date;
-        updateBill(totalDeliveryCharge());
-    })
-})
 
-document.querySelectorAll(".delete-quantity-link").forEach((button) => {
-    button.addEventListener("click",() => {
-        deleteFromCheckoutPage(button.dataset.id);
-        updateNumberOfItems();
-        updateBill(totalDeliveryCharge());
-    })
-})
-
-document.querySelectorAll(".update-quantity-link").forEach((button) => {
-    button.addEventListener("click",() => {
-        const id = button.dataset.id;
-        document.querySelector(".update-quantity-link-"+id).classList.add("hide");
-        document.querySelector(".save-quantity-link-"+id).classList.remove("hide");
-    })
-})
-
-document.querySelectorAll(".save-quantity-button").forEach((button) => {
-    button.addEventListener("click",() => {
-        const id = button.dataset.id;
-        saveUpdateFromCheckoutPage(id);
-        updateNumberOfItems();
-        updateBill(totalDeliveryCharge());
-        document.querySelector(".update-quantity-link-"+id).classList.remove("hide");
-        document.querySelector(".save-quantity-input-"+id).value = "";
-        document.querySelector(".save-quantity-link-"+id).classList.add("hide");
-    })
-})
