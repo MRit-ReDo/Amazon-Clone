@@ -2,6 +2,10 @@ import { products } from "../../data/products.js";
 
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+const updateLocalStorage = (item,info) => {
+    localStorage.setItem(item,JSON.stringify(info));
+}
+
 const updateCart = () => {
     let totalItems = 0;
     cart.forEach(item => {
@@ -55,7 +59,7 @@ const addProductsToCart = (id) => {
         }
         cart.push(cartItem);
     }
-    localStorage.setItem("cart",JSON.stringify(cart));
+    updateLocalStorage("cart",cart);
     document.querySelector(".select-"+id).value = 1;
 }
 
@@ -63,8 +67,23 @@ const deleteFromCheckoutPage = (id) => {
     cart = cart.filter((cartItem) => {
         return cartItem.pid !== id;
     })
-    localStorage.setItem("cart",JSON.stringify(cart));
+    updateLocalStorage("cart",cart);
     document.querySelector(".cart-item-"+id).remove();
+}
+
+const saveUpdateFromCheckoutPage = (id) => {
+    const value = Number(document.querySelector(".save-quantity-input-"+id).value);
+    if (value > 0 && value <= 100) {
+        let match;
+        cart.forEach(item => {
+            if (item.pid === id) {
+                match = item;
+            }
+        });
+        match.qty = value;
+        updateLocalStorage("cart",cart);
+        document.querySelector(".quantity-label-"+id).innerHTML = value;
+    }
 }
 
 export {
@@ -73,5 +92,6 @@ export {
     displayAddedToCartMessage,
     findProductByID,cartTotal,
     addProductsToCart,
-    deleteFromCheckoutPage
+    deleteFromCheckoutPage,
+    saveUpdateFromCheckoutPage,
 };
