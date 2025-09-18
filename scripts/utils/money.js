@@ -1,5 +1,8 @@
+// import statements
 import { cartTotal } from "./cart.js";
 
+
+// defining helper functions
 const formatCurrency = (amt) => {
     return (amt/100).toFixed(2);
 }
@@ -18,8 +21,10 @@ const totalDeliveryCharge = () => {
     return totalCharge;
 }
 
+
+// rendering functions
 const updateBill = (deliveryCharge) => {
-    const total = cartTotal();
+    const total = cartTotal().value;
     const beforeTax = deliveryCharge+total
     const tax = calculateTax(beforeTax);
     document.querySelector(".initial-total").innerHTML = "$"+formatCurrency(total);
@@ -29,4 +34,10 @@ const updateBill = (deliveryCharge) => {
     document.querySelector(".final-bill").innerHTML = "$"+formatCurrency(tax+beforeTax);
 }
 
-export {formatCurrency,totalDeliveryCharge,updateBill};
+
+// listing exports
+export {
+    formatCurrency,
+    totalDeliveryCharge,
+    updateBill
+};

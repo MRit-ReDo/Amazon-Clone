@@ -1,7 +1,12 @@
+// initializing variables
 const weekDays = [null,"Monday","Tuesday","Wednesday","Thursday","Friday"]
+
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 const supplement = [["0","FREE"],["499","$4.99 -"],["999","$9.99 -"]];
 
+
+// defining helper functions
 const isWeekend = (day) => {
     if (day.$W === 0) {
         return day.add(1,"day");
@@ -34,6 +39,7 @@ const deliveryOptions = (options) => {
     return formattedOptions;
 }
 
+// rendering functions
 const deliveryDates = deliveryOptions(calculateDeliveryDates());
 
 const renderDeliverySelection = (id) => {
@@ -55,6 +61,7 @@ const renderDeliverySelection = (id) => {
     return deliveryOptionsHTML
 }
 
+// listing exports
 export {
     deliveryDates,
     renderDeliverySelection
