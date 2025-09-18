@@ -2,7 +2,7 @@
 import { 
     products,
     loadProducts 
-} from "../data/products.js";
+} from "./utils/products.js";
 
 import { cart } from "./utils/cart.js";
 
