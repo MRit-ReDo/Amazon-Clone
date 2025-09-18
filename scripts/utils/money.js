@@ -1,5 +1,5 @@
 // import statements
-import { cartTotal } from "./cart.js";
+import { cart } from "./cart.js";
 
 
 // defining helper functions
@@ -24,7 +24,7 @@ const totalDeliveryCharge = () => {
 
 // rendering functions
 const updateBill = (deliveryCharge) => {
-    const total = cartTotal().value;
+    const total = cart.cartTotal().value;
     const beforeTax = deliveryCharge+total
     const tax = calculateTax(beforeTax);
     document.querySelector(".initial-total").innerHTML = "$"+formatCurrency(total);
