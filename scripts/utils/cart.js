@@ -2,7 +2,7 @@
 import { 
     products,
     findProductByID
-} from "../../data/products.js";
+} from "./products.js";
 
 
 // defining classes
