@@ -32,33 +32,20 @@ class Clothing extends Product {
     }
 
     renderExtraInformation = () => {
-        return `<a href="${this.sizeChartLink}" target="_self" style="cursor: pointer"
-        onmouseover="this.style.color='rgb(196, 80, 0)';"
-        onmouseout="this.style.color='rgb(1, 124, 182)';">Size chart</a>`
+        return `<a href="${this.sizeChartLink}" target="_self">Size chart</a>`
     }
 }
 
 class Appliance extends Product {
-    instructionsLink;
     warrantyLink;
 
     constructor(productDetails) {
         super(productDetails);
-        this.instructionsLink = productDetails.instructionsLink;
-        this.warrantyLink = productDetails.warrantyLink;
+        this.warrantyLink = "images/appliance-warranty.png";
     }
 
     renderExtraInformation = () => {
-        return `
-        <span>
-            <a href="${this.instructionsLink}" target="_self" style="cursor: pointer; margin-right: 5px"
-            onmouseover="this.style.color='rgb(196, 80, 0)';"
-            onmouseout="this.style.color='rgb(1, 124, 182)';">Instructions</a>
-            <a href="${this.warrantyLink}" target="_self" style="cursor: pointer"
-            onmouseover="this.style.color='rgb(196, 80, 0)';"
-            onmouseout="this.style.color='rgb(1, 124, 182)';">Warranty</a>
-        </span>
-        `
+        return `<a href="${this.warrantyLink}" target="_self">Warranty</a>`
     }
 }
 
@@ -86,7 +73,7 @@ const loadProducts = () => {
             if (productDetails.type === "clothing") {
                 return new Clothing(productDetails);
             }
-            else if (productDetails.keywords.indexOf("appliances") > -1) {
+            else if (productDetails.keywords.indexOf("kitchen") > -1) {
                 return new Appliance(productDetails);
             }
             return new Product(productDetails);
