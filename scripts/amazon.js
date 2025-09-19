@@ -16,11 +16,11 @@ const renderProductsPage = () => {
         productHTML += `
         <div class="product-container">
             <div class="product-image-container">
-                <img class="product-image" src="${product.image}">
+                <img class="product-image" src=${product.image}>
             </div>
             <div class="product-name limit-text-to-2-lines">${product.name}</div>
             <div class="product-rating-container">
-                <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars*10}.png">
+                <img class="product-rating-stars" src=${product.formatRatingImage()}>
                 <div class="product-rating-count link-primary">${product.rating.count}</div>
             </div>
             <div class="product-price">$${formatCurrency(product.priceCents)}</div>
@@ -46,7 +46,6 @@ const renderProductsPage = () => {
     // binding event listeners
     document.querySelectorAll(".add-to-cart-button").forEach(button => {
         button.addEventListener("click",() => {
-            console.log(products);
             clearTimeout();
             const id = button.dataset.productId;
             cart.addProductsToCart(id);
@@ -59,5 +58,3 @@ const renderProductsPage = () => {
 loadProducts().then(() => {
     renderProductsPage();
 })
-
-
