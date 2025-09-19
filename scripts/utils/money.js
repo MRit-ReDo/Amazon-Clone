@@ -23,15 +23,21 @@ const totalDeliveryCharge = () => {
 
 
 // rendering functions
-const updateBill = (deliveryCharge) => {
+const updateBill = (deliveryCharge,render) => {
     const total = cart.cartTotal().value;
     const beforeTax = deliveryCharge+total
     const tax = calculateTax(beforeTax);
-    document.querySelector(".initial-total").innerHTML = "$"+formatCurrency(total);
-    document.querySelector(".delivery-charge").innerHTML = "$"+formatCurrency(deliveryCharge);
-    document.querySelector(".before-tax").innerHTML = "$"+formatCurrency(beforeTax);
-    document.querySelector(".tax-charged").innerHTML = "$"+formatCurrency(tax);
-    document.querySelector(".final-bill").innerHTML = "$"+formatCurrency(tax+beforeTax);
+    const finalBill = tax+beforeTax;
+    if (render) {
+        document.querySelector(".initial-total").innerHTML = "$"+formatCurrency(total);
+        document.querySelector(".delivery-charge").innerHTML = "$"+formatCurrency(deliveryCharge);
+        document.querySelector(".before-tax").innerHTML = "$"+formatCurrency(beforeTax);
+        document.querySelector(".tax-charged").innerHTML = "$"+formatCurrency(tax);
+        document.querySelector(".final-bill").innerHTML = "$"+formatCurrency(finalBill);
+    }
+    else {
+        return finalBill;
+    }
 }
 
 
