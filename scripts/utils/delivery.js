@@ -1,5 +1,5 @@
 // initializing variables
-const weekDays = [null,"Monday","Tuesday","Wednesday","Thursday","Friday"]
+const weekDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -7,6 +7,11 @@ const supplement = [["0","FREE"],["499","$4.99 -"],["999","$9.99 -"]];
 
 
 // defining helper functions
+const formatToday = () => {
+    const today = dayjs();
+    return months[today.$M]+" "+String(today.$M)
+}
+
 const isWeekend = (day) => {
     if (day.$W === 0) {
         return day.add(1,"day");
@@ -39,16 +44,19 @@ const deliveryOptions = (options) => {
     return formattedOptions;
 }
 
-// rendering functions
+
+// defining variables
 const deliveryDates = deliveryOptions(calculateDeliveryDates());
 
+
+// rendering functions
 const renderDeliverySelection = (id) => {
     let deliveryOptionsHTML = `<div class="delivery-options-title">Choose a delivery option:</div>`;
     let counter = 0;
     deliveryDates.forEach(date => {
         deliveryOptionsHTML += `
             <div class="delivery-option">
-                <input type="radio" checked class="delivery-option-input" name="delivery-option-${id}"
+                <input type="radio" class="delivery-option-input" checked name="delivery-option-${id}"
                 data-date="${date}" data-charge="${supplement[counter][0]}" data-id="${id}">
                 <div>
                     <div class="delivery-option-date">${date}</div>
@@ -61,8 +69,10 @@ const renderDeliverySelection = (id) => {
     return deliveryOptionsHTML
 }
 
+
 // listing exports
 export {
+    formatToday,
     deliveryDates,
     renderDeliverySelection
 };
