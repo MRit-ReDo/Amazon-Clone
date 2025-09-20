@@ -62,7 +62,7 @@ class Cart {
     }
 
     addProductsToCart = (id) => {
-        const toAdd = Number(document.querySelector(".select-"+id).value);
+        const toAdd = Number(document.querySelector(".select-"+id).value) || 1;
         const match = findProductByID(this.cart,id);
         if (match) {
             match.qty += toAdd;
