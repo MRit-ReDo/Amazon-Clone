@@ -3,6 +3,8 @@ const weekDays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","S
 
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
+const dividend = [31,28,31,30,31,30,31,31,30,31,30,31]
+
 const supplement = [["0","FREE"],["499","$4.99 -"],["999","$9.99 -"]];
 
 
@@ -10,6 +12,33 @@ const supplement = [["0","FREE"],["499","$4.99 -"],["999","$9.99 -"]];
 const formatToday = () => {
     const today = dayjs();
     return months[today.$M]+" "+String(today.$M)
+}
+
+const subtractDates = (date) => {
+    const today = dayjs();
+    const splitDate = date.split(" ")
+    const compare = Number(splitDate[2])
+    let remaining;
+    for (let i = 0; i < 10; i++) {
+        if ((today.$D+i)%dividend[today.$M] === compare) {
+            remaining = i
+        }
+    }
+    let status = 0;
+    let percentage = Number((((9-remaining)/9)*100).toFixed(0));
+    if (percentage === 0) {
+        return [10,0]
+    }
+    else if (percentage < 100 && percentage >= 45) {
+        status = 1;
+    }
+    else if (percentage === 100) {
+        return [100,2]
+    }
+    else if (percentage < 45 && percentage > 0) {
+        status = 0;
+    }
+    return [percentage,status]
 }
 
 const isWeekend = (day) => {
@@ -73,6 +102,7 @@ const renderDeliverySelection = (id) => {
 // listing exports
 export {
     formatToday,
+    subtractDates,
     deliveryDates,
     renderDeliverySelection
 };
