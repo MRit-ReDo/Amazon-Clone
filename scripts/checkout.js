@@ -1,15 +1,9 @@
 // import statements
-import { 
-    products,
-    loadProducts,
-    findProductByID
-} from "./utils/products.js";
-
 import { cart } from "./utils/cart.js";
 
 import { 
-    deliveryDates,
     formatToday,
+    deliveryDates,
     renderDeliverySelection
 } from "./utils/delivery.js";
 
@@ -20,11 +14,17 @@ import {
 } from "./utils/money.js";
 
 import { 
+    Order,
     orders,
-    generateHash,
-    Order, 
+    generateHash, 
     loadOrderItems
 } from "./utils/order.js";
+
+import { 
+    products,
+    findProductByID,
+    loadProducts
+} from "./utils/products.js";
 
 
 // rendering functions
