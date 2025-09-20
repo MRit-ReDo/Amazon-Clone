@@ -51,7 +51,7 @@ const loadOrderItems = () => {
         const orderItemDetails = {
             id: id,
             quantity: cartItem.qty,
-            arriving: document.querySelector(".delivery-date-"+id).lastChild.innerHTML
+            arriving: document.querySelector(".delivery-date-"+id).lastChild.innerHTML,
         }
         orderItems.push(new OrderItem(orderItemDetails))
     });
