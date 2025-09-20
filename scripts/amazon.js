@@ -1,12 +1,12 @@
 // import statements
+import { cart } from "./utils/cart.js";
+
+import { formatCurrency } from "./utils/money.js"
+
 import { 
     products,
     loadProducts 
 } from "./utils/products.js";
-
-import { cart } from "./utils/cart.js";
-
-import { formatCurrency } from "./utils/money.js"
 
 
 // rendering functions
